@@ -8,13 +8,17 @@ return {
         keymap = '<Leader>j',
         desc = 'Make JIRA link a markdown link',
       },
+      jira_to_doc_and_link = {
+        macro = '$T/<Ignore>"uy$Fh<Ignore>i[<Esc>"upa](<Esc>"upa.md)<Esc>a<CR><Space><Space>*<Space>[<Esc>"upa](<Esc>A)<Esc>',
+        desc = 'Make JIRA link a document link and a JIRA link',
+      },
     },
     -- All of your `setup(opts)` and saved macros will go here
   },
   config = function(_, opts)
+    require('macroni').setup(opts)
     vim.keymap.set({ 'n', 'v' }, '<Leader>m', function()
       require('telescope').extensions.macroni.saved_macros()
     end)
-    require('macroni').setup { opts }
   end,
 }
