@@ -973,5 +973,32 @@ require('lazy').setup({
   },
 })
 
+function InsertFileFromDir()
+  require('telescope.builtin').find_files {
+    prompt_title = 'Valitse tehtävä',
+    cwd = '~/Documents/varma/templates', -- Change this to your desired folder
+    attach_mappings = function(prompt_bufnr, map)
+      local actions = require 'telescope.actions'
+      local action_state = require 'telescope.actions.state'
+
+      local function insert_file()
+        local entry = action_state.get_selected_entry()
+        if entry then
+          local filepath = entry.path or entry[1]
+          actions.close(prompt_bufnr) -- Close Telescope
+          vim.cmd('read ' .. vim.fn.fnameescape(filepath)) -- Insert file content
+        end
+      end
+
+      map('i', '<CR>', insert_file) -- Insert on Enter in insert mode
+      map('n', '<CR>', insert_file) -- Insert on Enter in normal mode
+
+      return true
+    end,
+  }
+end
+
+vim.api.nvim_set_keymap('n', '<Leader>i', ':lua InsertFileFromDir()<CR>', { noremap = true, silent = true })
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
